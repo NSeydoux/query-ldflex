@@ -1,5 +1,7 @@
-import SolidUpdateEngine from '../../src/SolidUpdateEngine';
-import auth from 'solid-auth-client';
+import SolidUpdateEngine from '../src/SolidUpdateEngine';
+import { fetch } from '@inrupt/solid-auth-fetcher';
+
+jest.mock('@inrupt/solid-auth-fetcher');
 
 const mockEngine = {
   execute: jest.fn(async function* asyncResults() {
@@ -11,6 +13,12 @@ const mockEngine = {
 describe('a SolidUpdateEngine instance', () => {
   let engine, bindings;
   beforeEach(() => {
+    // Defaults to a successful request
+    fetch.mockResolvedValue({
+      ok: true,
+      status: 200,
+      statusText: 'OK',
+    });
     engine = new SolidUpdateEngine('https://example.org/', mockEngine);
   });
 
@@ -44,27 +52,27 @@ describe('a SolidUpdateEngine instance', () => {
     });
 
     it('issues a PATCH request', () => {
-      expect(auth.fetch).toHaveBeenCalledTimes(1);
-      const args = auth.fetch.mock.calls[0];
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const args = fetch.mock.calls[0];
       expect(args[1]).toHaveProperty('method', 'PATCH');
     });
 
     it('issues the request to the default source', () => {
-      expect(auth.fetch).toHaveBeenCalledTimes(1);
-      const args = auth.fetch.mock.calls[0];
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const args = fetch.mock.calls[0];
       expect(args[0]).toBe('https://example.org/');
     });
 
     it('sets the Content-Type to application/sparql-update', () => {
-      expect(auth.fetch).toHaveBeenCalledTimes(1);
-      const args = auth.fetch.mock.calls[0];
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const args = fetch.mock.calls[0];
       expect(args[1]).toHaveProperty('headers');
       expect(args[1].headers).toHaveProperty('Content-Type', 'application/sparql-update');
     });
 
     it('sends a patch document', () => {
-      expect(auth.fetch).toHaveBeenCalledTimes(1);
-      const args = auth.fetch.mock.calls[0];
+      expect(fetch).toHaveBeenCalledTimes(1);
+      const args = fetch.mock.calls[0];
       expect(args[1]).toHaveProperty('body');
       expect(args[1].body).toEqual('INSERT DATA { <> <> <> }');
     });
@@ -84,20 +92,25 @@ describe('a SolidUpdateEngine instance', () => {
   it('accepts a URL as source', async () => {
     const source = new URL('http://a.example/');
     await engine.execute('INSERT DATA { <> <> <> }', source).next();
-    expect(auth.fetch).toHaveBeenCalledTimes(1);
-    const args = auth.fetch.mock.calls[0];
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const args = fetch.mock.calls[0];
     expect(args[0]).toBe('http://a.example/');
   });
 
   it('accepts a NamedNode as source', async () => {
     const source = { value: 'http://a.example/' };
     await engine.execute('INSERT DATA { <> <> <> }', source).next();
-    expect(auth.fetch).toHaveBeenCalledTimes(1);
-    const args = auth.fetch.mock.calls[0];
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const args = fetch.mock.calls[0];
     expect(args[0]).toBe('http://a.example/');
   });
 
   test('executing an invalid query throws an error', async () => {
+    fetch.mockResolvedValue({
+      ok: false,
+      status: 123,
+      statusText: 'Status',
+    });
     await expect(engine.execute('INSERT error').next()).rejects
       .toThrow(new Error('Update query failed (123): Status'));
   });
@@ -105,8 +118,8 @@ describe('a SolidUpdateEngine instance', () => {
   it('accepts a nested array as source', async () => {
     const source = [[['http://a.example/']]];
     await engine.execute('INSERT DATA { <> <> <> }', source).next();
-    expect(auth.fetch).toHaveBeenCalledTimes(1);
-    const args = auth.fetch.mock.calls[0];
+    expect(fetch).toHaveBeenCalledTimes(1);
+    const args = fetch.mock.calls[0];
     expect(args[0]).toBe('http://a.example/');
   });
 

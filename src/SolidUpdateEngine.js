@@ -1,4 +1,4 @@
-import auth from 'solid-auth-client';
+import { fetch } from '@inrupt/solid-auth-fetcher';
 import { asList } from './util';
 
 /**
@@ -37,7 +37,7 @@ export default class SolidUpdateEngine {
 
       // Send authenticated PATCH request to the document
       const source = await (sources ? this.getUpdateSource(sources) : this._source);
-      const { ok, status, statusText } = await auth.fetch(source, {
+      const { ok, status, statusText } = await fetch(source, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/sparql-update',

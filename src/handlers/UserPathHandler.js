@@ -1,5 +1,5 @@
 import SubjectPathResolver from '../resolvers/SubjectPathResolver';
-import auth from 'solid-auth-client';
+import { getSession } from '@inrupt/solid-auth-fetcher';
 import { namedNode } from '@rdfjs/data-model';
 
 /**
@@ -13,7 +13,7 @@ export default class UserPathHandler extends SubjectPathResolver {
 
   /** Gets the WebID of the logged in user */
   async getWebId() {
-    const session = await auth.currentSession();
+    const session = await getSession();
     if (!session)
       throw new Error('Cannot resolve user path: no user logged in');
     return session.webId;

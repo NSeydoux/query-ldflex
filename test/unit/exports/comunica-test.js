@@ -1,5 +1,5 @@
 import data from '../../../src/exports/comunica';
-import auth from 'solid-auth-client';
+import { getSession } from '@inrupt/solid-auth-fetcher';
 import SolidUpdateEngine from '../../../src/SolidUpdateEngine';
 import FindActivityHandler from '../../../src/handlers/FindActivityHandler';
 import CreateActivityHandler from '../../../src/handlers/CreateActivityHandler';
@@ -7,6 +7,8 @@ import DeleteActivityHandler from '../../../src/handlers/DeleteActivityHandler';
 import { namedNode } from '@rdfjs/data-model';
 
 jest.mock('../../../src/SolidUpdateEngine');
+jest.mock('@inrupt/solid-auth-fetcher');
+
 async function* noResults() { /* empty */ }
 SolidUpdateEngine.prototype.execute = jest.fn(noResults);
 
@@ -151,7 +153,7 @@ describe('The @solid/ldflex module', () => {
     describe('when logged in', () => {
       const webId = 'https://ex.org/#me';
       beforeEach(async () => {
-        auth.currentSession.mockReturnValue({ webId });
+        getSession.mockReturnValue({ webId });
         await data.user.firstName;
       });
 
