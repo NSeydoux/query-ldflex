@@ -22,7 +22,7 @@
     ".babelrc"
   ],
   "dependencies": {
-    "@ldflex/comunica": "^3.4.0",
+    "@ldflex/comunica": "github:inrupt/LDflex-Comunica#feature/auth-upgrade",
     "@rdfjs/data-model": "^1.1.2",
     "@solid/context": "^1.1.0",
     "ldflex": "^2.9.0",
