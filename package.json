@@ -22,11 +22,11 @@
     ".babelrc"
   ],
   "dependencies": {
+    "@inrupt/solid-auth-fetcher": "~0.0.6",
     "@ldflex/comunica": "github:inrupt/LDflex-Comunica#feature/auth-upgrade",
     "@rdfjs/data-model": "^1.1.2",
     "@solid/context": "^1.1.0",
     "ldflex": "^2.9.0",
-    "@inrupt/solid-auth-fetcher": "~0.0.4",
     "uuid": "^7.0.1"
   },
   "devDependencies": {
