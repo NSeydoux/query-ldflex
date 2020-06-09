@@ -1,4 +1,4 @@
-import SolidUpdateEngine from '../src/SolidUpdateEngine';
+import SolidUpdateEngine from '../../src/SolidUpdateEngine';
 import { fetch } from '@inrupt/solid-auth-fetcher';
 
 jest.mock('@inrupt/solid-auth-fetcher');
