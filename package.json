@@ -27,7 +27,7 @@
     "@solid/context": "^1.1.0",
     "ldflex": "^2.8.0",
     "solid-auth-client": "^2.4.1",
-    "uuid": "^7.0.1"
+    "uuid": "^7.0.3"
   },
   "devDependencies": {
     "@babel/cli": "^7.8.4",
